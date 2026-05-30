@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support GreenCat777</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <script src="https://www.paypal.com/sdk/js?client-id=Aa5EkQojtgJyPLxnxFOJjmwpvgmb7fxJKymn_dXp4CjAYpQ6njOVcGUiyLUtsY0AsLV8MGi47YOnjsN7&components=buttons&enable-funding=crypto&currency=USD"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #00ff41;
+      --green-glow: rgba(0,255,65,0.6);
+      --green-dim: rgba(0,255,65,0.12);
+      --green-border: rgba(0,255,65,0.45);
+      --bg: #000;
+      --card-bg: #050f05;
+      --mono: 'Share Tech Mono', monospace;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--green);
+      font-family: var(--mono);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pfp {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      border: 3px solid var(--green);
+      box-shadow: 0 0 20px var(--green-glow), 0 0 40px rgba(0,255,65,0.2);
+      margin-bottom: 18px;
+      display: block;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      color: var(--green);
+      text-shadow: 0 0 14px var(--green-glow);
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 0.82rem;
+      opacity: 0.6;
+      margin-bottom: 36px;
+      text-align: center;
+    }
+
+    .card {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1.5px solid var(--green-border);
+      border-radius: 8px;
+      box-shadow: 0 0 16px rgba(0,255,65,0.1), inset 0 0 30px rgba(0,255,65,0.02);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .prompt {
+      font-size: 0.8rem;
+      opacity: 0.5;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .prompt span { opacity: 1; color: var(--green); }
+
+    .amounts {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .amt-btn {
+      flex: 1;
+      padding: 10px 6px;
+      background: transparent;
+      border: 1.5px solid var(--green-border);
+      border-radius: 4px;
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.12s;
+      text-align: center;
+      opacity: 0.65;
+    }
+    .amt-btn:hover { opacity: 1; box-shadow: 0 0 8px rgba(0,255,65,0.25); }
+    .amt-btn.active {
+      background: var(--green-dim);
+      border-color: var(--green);
+      opacity: 1;
+      box-shadow: 0 0 12px rgba(0,255,65,0.3);
+    }
+
+    .field { margin-bottom: 12px; }
+    .field-label {
+      font-size: 0.72rem;
+      opacity: 0.45;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      background: transparent;
+      border: 1.5px solid rgba(0,255,65,0.25);
+      border-radius: 4px;
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 0.88rem;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 8px rgba(0,255,65,0.18);
+    }
+    input::placeholder, textarea::placeholder { color: rgba(0,255,65,0.25); }
+    textarea { resize: vertical; min-height: 70px; }
+    #custom-input { display: none; margin-bottom: 12px; }
+
+    /* Big pay button */
+    #pay-btn {
+      width: 100%;
+      margin-top: 18px;
+      padding: 14px;
+      background: var(--green-dim);
+      border: 2px solid var(--green);
+      border-radius: 4px;
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      box-shadow: 0 0 16px rgba(0,255,65,0.25);
+      transition: all 0.15s;
+    }
+    #pay-btn:hover {
+      background: rgba(0,255,65,0.2);
+      box-shadow: 0 0 24px rgba(0,255,65,0.45);
+    }
+    #pay-btn:active { transform: scale(0.98); }
+
+    /* PayPal renders inside here, hidden until triggered */
+    #paypal-button-container { display: none; margin-top: 14px; }
+
+    #status {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      min-height: 18px;
+      text-align: center;
+    }
+    #status.error { color: #ff4444; }
+
+    /* Donor wall */
+    .donor-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .donor-entry {
+      border: 1px solid rgba(0,255,65,0.18);
+      border-radius: 4px;
+      padding: 12px 14px;
+      background: rgba(0,255,65,0.02);
+      animation: fadeUp 0.3s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(5px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .donor-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+    .donor-name { font-size: 0.88rem; text-shadow: 0 0 6px rgba(0,255,65,0.35); }
+    .donor-amount { font-size: 0.75rem; opacity: 0.5; }
+    .donor-msg { font-size: 0.78rem; opacity: 0.6; font-style: italic; margin-bottom: 4px; }
+    .donor-time { font-size: 0.62rem; opacity: 0.3; }
+
+    .empty-wall { font-size: 0.8rem; opacity: 0.35; text-align: center; padding: 24px 0; }
+    .cursor {
+      display: inline-block; width: 8px; height: 13px;
+      background: var(--green); vertical-align: middle; margin-left: 2px;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,255,65,0.25); border-radius: 2px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <img class="pfp" src="https://www.greencat777.xyz/pfp.png" alt="GreenCat777" />
+
+  <h1>Support GreenCat777</h1>
+  <p class="subtitle">pay with crypto &mdash; no account needed</p>
+
+  <div class="card">
+    <div class="prompt"><span>greencat777@bio:~$</span> cat support.txt</div>
+
+    <div class="amounts">
+      <button class="amt-btn active" data-val="3">$3</button>
+      <button class="amt-btn" data-val="5">$5</button>
+      <button class="amt-btn" data-val="10">$10</button>
+      <button class="amt-btn" data-val="custom">other</button>
+    </div>
+
+    <input type="number" id="custom-input" placeholder="enter amount in USD" min="1" step="0.01" />
+
+    <div class="field">
+      <span class="field-label"># name (blank = anonymous)</span>
+      <input type="text" id="donor-name" placeholder="your name" />
+    </div>
+
+    <div class="field">
+      <span class="field-label"># message (optional)</span>
+      <textarea id="donor-msg" placeholder="say something..."></textarea>
+    </div>
+
+    <button id="pay-btn">[ PAY NOW ]</button>
+    <div id="paypal-button-container"></div>
+    <div id="status"></div>
+  </div>
+
+  <div class="card">
+    <div class="prompt"><span>greencat777@bio:~$</span> cat supporters.log</div>
+    <div class="donor-list" id="donor-list">
+      <div class="empty-wall">no entries yet<span class="cursor"></span></div>
+    </div>
+  </div>
+
+</div>
+<script>
+  const STORAGE_KEY = 'gc777_donors_v2';
+  let selectedAmount = 3;
+  let paypalRendered = false;
+
+  document.querySelectorAll('.amt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const ci = document.getElementById('custom-input');
+      if (btn.dataset.val === 'custom') {
+        ci.style.display = 'block';
+        ci.focus();
+        selectedAmount = parseFloat(ci.value) || 0;
+      } else {
+        ci.style.display = 'none';
+        selectedAmount = parseFloat(btn.dataset.val);
+      }
+      paypalRendered = false;
+    });
+  });
+
+  document.getElementById('custom-input').addEventListener('input', e => {
+    selectedAmount = parseFloat(e.target.value) || 0;
+  });
+
+  document.getElementById('pay-btn').addEventListener('click', () => {
+    if (!selectedAmount || selectedAmount < 1) {
+      setStatus('> enter an amount of at least $1', true);
+      return;
+    }
+    const container = document.getElementById('paypal-button-container');
+    if (!paypalRendered) {
+      container.style.display = 'block';
+      container.innerHTML = '';
+      paypal.Buttons({
+        style: { layout:'vertical', color:'black', shape:'rect', label:'pay' },
+        createOrder(data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: { value: selectedAmount.toFixed(2), currency_code: 'USD' },
+              description: 'Support GreenCat777'
+            }]
+          });
+        },
+        onApprove(data, actions) {
+          return actions.order.capture().then(() => {
+            const name = document.getElementById('donor-name').value.trim() || 'Anonymous';
+            const msg  = document.getElementById('donor-msg').value.trim();
+            const time = new Date().toLocaleString('en-US', { dateStyle:'medium', timeStyle:'short' });
+            saveDonor({ name, msg, amount: selectedAmount, time });
+            renderWall();
+            container.style.display = 'none';
+            paypalRendered = false;
+            setStatus(`> payment received. thank you, ${name}!`);
+            document.getElementById('donor-name').value = '';
+            document.getElementById('donor-msg').value = '';
+          });
+        },
+        onError(err) { console.error(err); setStatus('> error processing payment. try again.', true); },
+        onCancel()   { container.style.display='none'; paypalRendered=false; setStatus('> payment cancelled.'); }
+      }).render('#paypal-button-container');
+      paypalRendered = true;
+    } else {
+      container.style.display = container.style.display === 'none' ? 'block' : 'none';
+    }
+  });
+
+  function getDonors() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+  }
+  function saveDonor(entry) {
+    const d = getDonors();
+    d.unshift(entry);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(d.slice(0, 100)));
+  }
+  function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function renderWall() {
+    const donors = getDonors();
+    const list = document.getElementById('donor-list');
+    if (!donors.length) {
+      list.innerHTML = '<div class="empty-wall">no entries yet<span class="cursor"></span></div>';
+      return;
+    }
+    list.innerHTML = donors.map(d => `
+      <div class="donor-entry">
+        <div class="donor-top">
+          <span class="donor-name">${esc(d.name)}</span>
+          <span class="donor-amount">$${parseFloat(d.amount).toFixed(2)}</span>
+        </div>
+        ${d.msg ? `<div class="donor-msg">${esc(d.msg)}</div>` : ''}
+        <div class="donor-time">${d.time}</div>
+      </div>
+    `).join('');
+  }
+  function setStatus(msg, isError=false) {
+    const el = document.getElementById('status');
+    el.textContent = msg;
+    el.className = isError ? 'error' : '';
+    if (!isError) setTimeout(() => el.textContent='', 6000);
+  }
+
+  renderWall();
+</script>
+</body>
+</html>
