@@ -298,7 +298,7 @@ export default function CryptoPage({ paypalClientId }) {
 
         {paypalClientId && (
           <PayPalScriptProvider options={{ clientId: paypalClientId, currency: 'USD', enableFunding: 'crypto' }}>
-            <div style={{ display: showPayPal ? 'block' : 'none', marginTop: 14 }}>
+            <div style={{ height: showPayPal ? 'auto' : 0, overflow: 'hidden', marginTop: showPayPal ? 14 : 0 }}>
               <PayPalButtons
                 style={{ layout: 'vertical', color: 'black', shape: 'rect', label: 'pay' }}
                 forceReRender={[finalAmt]}
