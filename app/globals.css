@@ -1,0 +1,22 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green: #00ff41;
+  --green-glow: rgba(0,255,65,0.6);
+  --green-dim: rgba(0,255,65,0.12);
+  --green-border: rgba(0,255,65,0.45);
+  --bg: #000;
+  --card-bg: #050f05;
+  --mono: 'Share Tech Mono', monospace;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--green);
+  font-family: var(--mono);
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: rgba(0,255,65,0.25); border-radius: 2px; }
