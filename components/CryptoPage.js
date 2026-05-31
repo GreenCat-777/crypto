@@ -291,30 +291,30 @@ export default function CryptoPage({ paypalClientId }) {
           />
         </div>
 
-        {/* Pay button */}
-        {!showPayPal && (
-          <button style={styles.payBtn} onClick={handlePayNow}>
-            [ PAY NOW ]
-          </button>
-        )}
+        {/* Always mount PayPal SDK, show/hide buttons */}
+        <button style={styles.payBtn} onClick={handlePayNow}>
+          [ PAY NOW ]
+        </button>
 
-        {/* PayPal buttons */}
-        {showPayPal && paypalClientId && (
+        {paypalClientId && (
           <PayPalScriptProvider options={{ clientId: paypalClientId, currency: 'USD', enableFunding: 'crypto' }}>
-            <PayPalButtons
-              style={{ layout: 'vertical', color: 'black', shape: 'rect', label: 'pay' }}
-              createOrder={(data, actions) =>
-                actions.order.create({
-                  purchase_units: [{
-                    amount: { value: finalAmt.toFixed(2), currency_code: 'USD' },
-                    description: 'Support GreenCat777',
-                  }],
-                })
-              }
-              onApprove={handleApprove}
-              onError={() => setMsg('> error processing payment. try again.', true)}
-              onCancel={() => { setShowPayPal(false); setMsg('> payment cancelled.') }}
-            />
+            <div style={{ display: showPayPal ? 'block' : 'none', marginTop: 14 }}>
+              <PayPalButtons
+                style={{ layout: 'vertical', color: 'black', shape: 'rect', label: 'pay' }}
+                forceReRender={[finalAmt]}
+                createOrder={(data, actions) =>
+                  actions.order.create({
+                    purchase_units: [{
+                      amount: { value: finalAmt.toFixed(2), currency_code: 'USD' },
+                      description: 'Support GreenCat777',
+                    }],
+                  })
+                }
+                onApprove={handleApprove}
+                onError={() => setMsg('> error processing payment. try again.', true)}
+                onCancel={() => { setShowPayPal(false); setMsg('> payment cancelled.') }}
+              />
+            </div>
           </PayPalScriptProvider>
         )}
 
